@@ -12,7 +12,7 @@ class WiringViewPage extends StatefulWidget {
 }
 
 class _WiringViewPageState extends State<WiringViewPage> {
-  bool _showLabels = false;
+  bool _showLabels = true;
   // Default on: you wire a prop from the back, not the front/display side
   // the model's own coordinates describe, so the mirrored view is what most
   // people opening this screen actually need.
