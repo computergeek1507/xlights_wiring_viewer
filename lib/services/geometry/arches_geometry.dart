@@ -57,14 +57,16 @@ WiredModel buildArches(XmlElement root) {
 
 /// One arch's local points (before arch-to-arch x offset), y shifted so its
 /// minimum is 0. `angle(p) = -Arc/2 + Arc*p/(n-1)`, `x=(n-1)*sin(angle)`,
-/// `y=n*cos(angle)` (uses n, not n-1 — gives a slightly peaked arch, matching
-/// xLights' own formula rather than a true semicircle).
+/// `y=-n*cos(angle)` (uses n, not n-1 — gives a slightly peaked arch, matching
+/// xLights' own formula rather than a true semicircle; negated because
+/// xLights' convention is y-up but this canvas draws y-down — unflipped, the
+/// peak ended up at the bottom of the screen and the legs at the top).
 List<({double x, double y})> _archPoints(int n, double archRad) {
   if (n <= 1) return const [(x: 0.0, y: 0.0)];
   final points = <({double x, double y})>[];
   for (var p = 0; p < n; p++) {
     final angle = -archRad / 2 + archRad * p / (n - 1);
-    points.add((x: (n - 1) * math.sin(angle), y: n * math.cos(angle)));
+    points.add((x: (n - 1) * math.sin(angle), y: -n * math.cos(angle)));
   }
   final minY = points.map((e) => e.y).reduce(math.min);
   return [for (final p in points) (x: p.x, y: p.y - minY)];

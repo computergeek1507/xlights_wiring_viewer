@@ -26,7 +26,11 @@ WiredModel buildCircle(XmlElement root) {
     nodes.add(WiredNode(
       node: n + 1,
       x: radius * math.sin(angle),
-      y: radius * math.cos(angle),
+      // Negated: xLights' angle convention is y-up (angle 0 = "top" sits at
+      // +y), but this canvas draws y-down, so left unflipped "Bottom" would
+      // render at the top of the screen — same class of bug fixed in Tree
+      // and Star.
+      y: -radius * math.cos(angle),
     ));
   }
 

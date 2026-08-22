@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:xlights_wiring_viewer/models/wired_model.dart';
 import 'package:xlights_wiring_viewer/services/xmodel_importer.dart';
 
 void main() {
@@ -171,12 +174,63 @@ void main() {
     }
   });
 
+  test('Circle StartSide="B" (default) starts at the largest y (bottom of screen)', () {
+    // Regression: same y-up-vs-y-down class of bug as Tree/Arches/Star.
+    const xml = '<model DisplayAs="Circle" name="C1" NumStrings="1" NodesPerString="12" />';
+    final model = importXModel(xml);
+    final maxY = model.nodes.map((n) => n.y).reduce((a, b) => a > b ? a : b);
+    expect(model.nodes.first.y, closeTo(maxY, 1e-6));
+  });
+
+  test('Arches peaks at the smallest y (top of screen), legs at the largest', () {
+    // Regression: same y-up-vs-y-down class of bug as Tree/Circle/Star.
+    const xml = '<model DisplayAs="Arches" name="A1" '
+        'NumArches="1" NodesPerArch="9" LightsPerNode="1" Arc="180" />';
+    final model = importXModel(xml);
+    final byY = [...model.nodes]..sort((a, b) => a.y.compareTo(b.y));
+    // The peak (center of the arc) should be among the smallest-y nodes;
+    // the two legs (arc ends) among the largest-y nodes.
+    final peak = model.nodes[model.nodes.length ~/ 2];
+    expect(peak.y, closeTo(byY.first.y, 1e-6));
+    expect(model.nodes.first.y, closeTo(byY.last.y, 1e-6));
+    expect(model.nodes.last.y, closeTo(byY.last.y, 1e-6));
+  });
+
   test('Star walks the outline placing NumStrings x NodesPerString nodes', () {
     const xml =
         '<model DisplayAs="Star" name="S1" NumStrings="1" NodesPerString="20" StarPoints="5" />';
     final model = importXModel(xml);
     expect(model.nodes.length, 20);
     expect(model.nodes.map((n) => n.node).toSet(), Set.from(List.generate(20, (i) => i + 1)));
+  });
+
+  test('Star with no StarStartLocation (defaults to Top) starts at the smallest y', () {
+    // Regression: same y-up-vs-y-down class of bug as Tree/Circle/Arches.
+    const xml =
+        '<model DisplayAs="Star" name="S1" NumStrings="1" NodesPerString="20" StarPoints="5" />';
+    final model = importXModel(xml);
+    final minY = model.nodes.map((n) => n.y).reduce((a, b) => a < b ? a : b);
+    expect(model.nodes.first.y, closeTo(minY, 1e-6));
+  });
+
+  test('Star LayerSizes produces nested layers, outer first (case-insensitive attrs)', () {
+    // Regression case: a real vendor file ("Med Tree Star") uses lowercase
+    // starRatio/starCenterPercent attribute names, and lists LayerSizes
+    // innermost-first while wiring outermost-first.
+    const xml = '<starmodel name="Med Tree Star" parm1="1" parm2="50" parm3="5" '
+        'DisplayAs="Star" LayerSizes="20,30" starRatio="2.42" starCenterPercent="67" '
+        'StarStartLocation="Bottom Ctr-CW" />';
+    final model = importXModel(xml);
+    expect(model.nodes.length, 50);
+    // Outer layer (30 nodes) wired first, inner layer (20 nodes) second.
+    expect(model.nodes.sublist(0, 30).every((n) => n.strandIndex == 0), isTrue);
+    expect(model.nodes.sublist(30, 50).every((n) => n.strandIndex == 1), isTrue);
+
+    double dist(WiredNode n) => n.x * n.x + n.y * n.y;
+    final outerTip = model.nodes.sublist(0, 30).reduce((a, b) => dist(a) > dist(b) ? a : b);
+    final innerTip = model.nodes.sublist(30, 50).reduce((a, b) => dist(a) > dist(b) ? a : b);
+    // Inner layer's farthest point should be ~67% of the outer layer's.
+    expect(math.sqrt(dist(innerTip)) / math.sqrt(dist(outerTip)), closeTo(0.67, 0.01));
   });
 
   test('Spinner produces ArmsPerString x NodesPerArm nodes, arm-major order', () {
