@@ -34,6 +34,28 @@ function base64UrlDecode(string $s): string
     return base64_decode($s, true) ?: '';
 }
 
+// Vendor inventories sometimes list .xmodel URLs with raw spaces (or other
+// unsafe characters) in the filename, e.g. ".../Boscoyo ChromaStone 1.xmodel".
+// libcurl sends CURLOPT_URL's path verbatim rather than encoding it, so a
+// literal space breaks the outbound HTTP request line and the vendor's
+// server rejects it with 400 Bad Request. Decoding then re-encoding each
+// path segment fixes that while staying a no-op for already-clean URLs.
+function normalizeUrlForFetch(string $url): string
+{
+    $parts = parse_url($url);
+    if (!$parts) {
+        return $url;
+    }
+    $port = isset($parts['port']) ? ':' . $parts['port'] : '';
+    $path = $parts['path'] ?? '';
+    $encodedPath = implode('/', array_map(
+        fn($segment) => rawurlencode(rawurldecode($segment)),
+        explode('/', $path)
+    ));
+    $query = isset($parts['query']) ? '?' . $parts['query'] : '';
+    return ($parts['scheme'] ?? 'http') . '://' . ($parts['host'] ?? '') . $port . $encodedPath . $query;
+}
+
 // This proxy only ever relays public vendor-catalog XML (no sessions, no
 // credentials, nothing sensitive), and $ALLOWED_HOSTS below is what
 // actually prevents it from being an open proxy — so any origin may call
@@ -82,7 +104,7 @@ if (!in_array($host, $ALLOWED_HOSTS, true)) {
     exit;
 }
 
-$ch = curl_init($url);
+$ch = curl_init(normalizeUrlForFetch($url));
 curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_FOLLOWLOCATION => true,
