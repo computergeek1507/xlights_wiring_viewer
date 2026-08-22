@@ -13,12 +13,13 @@ import 'geometry_attrs.dart';
 /// size as a percent of full size) and its own sequential block of node
 /// numbers, all layers sharing the same start angle/direction.
 ///
-/// `LayerSizes` is listed and wired innermost-first — verified against a
-/// real two-layer vendor model ("Med Tree Star", `LayerSizes="20,30"`,
-/// `StarCenterPercent="67"`) against a reference from xLights itself: the
-/// 20-pixel layer wires as the smaller inner star at 67% size (nodes 1-20,
-/// starting at an inner "knee" vertex, not a point), then the 30-pixel
-/// layer as the full-size outer star (nodes 21-50).
+/// `LayerSizes` is listed innermost-first but wired outermost-first —
+/// verified against a real two-layer vendor model ("Med Tree Star",
+/// `LayerSizes="20,30"`, `StarCenterPercent="67"`) against a reference from
+/// xLights itself: the 30-pixel layer wires as the full-size outer star
+/// first (nodes 1-30, starting at an inner "knee" vertex, not a point),
+/// then the 20-pixel layer as the smaller inner star at 67% size (nodes
+/// 31-50) — so the list is reversed before assigning node-number blocks.
 WiredModel buildStar(XmlElement root) {
   final numStrings = math.max(1, attrInt(root, 'NumStrings', parmFallback: 'parm1', fallback: 1));
   final nodesPerString =
@@ -52,8 +53,8 @@ WiredModel buildStar(XmlElement root) {
       .where((n) => n > 0)
       .toList();
 
-  // Wired innermost-first, same order as listed (see doc comment).
-  final layerCounts = rawLayerSizes.length > 1 ? rawLayerSizes : [pixelCount];
+  // Wired outermost-first; the file lists innermost-first (see doc comment).
+  final layerCounts = rawLayerSizes.length > 1 ? rawLayerSizes.reversed.toList() : [pixelCount];
   final numLayers = layerCounts.length;
   final innerScale = (centerPercent > 0 ? centerPercent : (100 / numLayers)) / 100;
 
@@ -61,8 +62,8 @@ WiredModel buildStar(XmlElement root) {
   var nodeCounter = 1;
   for (var layerIdx = 0; layerIdx < numLayers; layerIdx++) {
     final count = layerCounts[layerIdx];
-    // layer 0 = inner (scale innerScale) ... last layer = outer (scale 1.0).
-    final scale = numLayers > 1 ? innerScale + (1.0 - innerScale) * (layerIdx / (numLayers - 1)) : 1.0;
+    // layer 0 = outer (scale 1.0) ... last layer = inner (scale innerScale).
+    final scale = numLayers > 1 ? 1.0 - (1.0 - innerScale) * (layerIdx / (numLayers - 1)) : 1.0;
     final outerRadius = baseOuterRadius * scale;
     final innerRadius = outerRadius / starRatio;
 

@@ -227,31 +227,32 @@ void main() {
     expect(model.nodes.first.y, lessThan(0));
   });
 
-  test('Star LayerSizes produces nested layers, inner first (case-insensitive attrs)', () {
+  test('Star LayerSizes produces nested layers, outer first (case-insensitive attrs)', () {
     // Regression case: a real vendor file ("Med Tree Star") uses lowercase
-    // starRatio/starCenterPercent attribute names, and both lists and wires
-    // LayerSizes innermost-first (confirmed against a reference render from
-    // xLights itself) — node 1 belongs to the smaller inner layer.
+    // starRatio/starCenterPercent attribute names, and lists LayerSizes
+    // innermost-first while wiring outermost-first (confirmed against a
+    // reference render from xLights itself) — node 1 belongs to the larger
+    // outer layer.
     const xml = '<starmodel name="Med Tree Star" parm1="1" parm2="50" parm3="5" '
         'DisplayAs="Star" LayerSizes="20,30" starRatio="2.42" starCenterPercent="67" '
         'StarStartLocation="Bottom Ctr-CW" />';
     final model = importXModel(xml);
     expect(model.nodes.length, 50);
-    // Inner layer (20 nodes) wired first, outer layer (30 nodes) second.
-    expect(model.nodes.sublist(0, 20).every((n) => n.strandIndex == 0), isTrue);
-    expect(model.nodes.sublist(20, 50).every((n) => n.strandIndex == 1), isTrue);
+    // Outer layer (30 nodes) wired first, inner layer (20 nodes) second.
+    expect(model.nodes.sublist(0, 30).every((n) => n.strandIndex == 0), isTrue);
+    expect(model.nodes.sublist(30, 50).every((n) => n.strandIndex == 1), isTrue);
 
     double dist(WiredNode n) => n.x * n.x + n.y * n.y;
-    final innerTip = model.nodes.sublist(0, 20).reduce((a, b) => dist(a) > dist(b) ? a : b);
-    final outerTip = model.nodes.sublist(20, 50).reduce((a, b) => dist(a) > dist(b) ? a : b);
+    final outerTip = model.nodes.sublist(0, 30).reduce((a, b) => dist(a) > dist(b) ? a : b);
+    final innerTip = model.nodes.sublist(30, 50).reduce((a, b) => dist(a) > dist(b) ? a : b);
     // Inner layer's farthest point should be ~67% of the outer layer's.
     expect(math.sqrt(dist(innerTip)) / math.sqrt(dist(outerTip)), closeTo(0.67, 0.01));
 
     // Node 1 starts at an inner "knee" vertex, not an outer point: its
-    // distance from center should match the inner layer's own innerRadius
-    // (baseOuterRadius * innerScale / starRatio), not its outerRadius.
+    // distance from center should match the outer layer's own innerRadius
+    // (baseOuterRadius / starRatio), not its full outerRadius.
     final node1Dist = math.sqrt(dist(model.nodes.first));
-    final layer0OuterRadius = (50 / 2) * 0.67;
+    final layer0OuterRadius = 50 / 2;
     final layer0InnerRadius = layer0OuterRadius / 2.42;
     expect(node1Dist, closeTo(layer0InnerRadius, 0.01));
   });
