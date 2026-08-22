@@ -134,6 +134,19 @@ void main() {
     expect(model.nodes.map((n) => n.node).toSet(), Set.from(List.generate(40, (i) => i + 1)));
   });
 
+  test('Tree (round) draws the wide base lower on screen than the narrow top', () {
+    // Regression: xLights' own tree math is y-up, but the canvas is y-down —
+    // porting the formula unflipped drew the wide physical base at the top
+    // of the screen and the narrow top at the bottom.
+    const xml = '<model DisplayAs="Tree" name="T1" TreeType="0" '
+        'NumStrings="1" NodesPerString="10" StrandsPerString="1" TreeBottomTopRatio="6" />';
+    final model = importXModel(xml);
+    // Node 1 is at buffer row 0 (t=0, the wide physical base); the last
+    // node is at the final row (t=1, the narrow top). A larger y means
+    // further down the screen in this app's coordinate convention.
+    expect(model.nodes.first.y, greaterThan(model.nodes.last.y));
+  });
+
   test('Tree accepts a <treemodel> root with legacy DisplayAs="Tree <degrees>"', () {
     // Regression case: a real vendor file (EFL Designs "Med NSR Tree") uses
     // a <treemodel> root tag with DisplayAs="Tree 120" and no TreeType/

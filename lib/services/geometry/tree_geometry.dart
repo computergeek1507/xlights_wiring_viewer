@@ -65,7 +65,10 @@ WiredModel buildTree(XmlElement root) {
       final xBottom = radius * math.sin(angle);
       final xTop = topRadius * math.sin(angle);
       final x = xBottom + (xTop - xBottom) * t;
-      final y = renderHt * t - renderHt / 2;
+      // t=0 is the (wide) physical bottom, t=1 the (narrow) top — xLights'
+      // own coordinate space is y-up, but our canvas draws y-down, so this
+      // must be negated or the wide base renders at the top of the screen.
+      final y = renderHt / 2 - renderHt * t;
       nodes.add(WiredNode(
         node: nodes.length + 1,
         x: x,
@@ -83,7 +86,8 @@ WiredModel buildTree(XmlElement root) {
       final xTop = (p.col + 0.5 - bufferWi / 2) * 0.9;
       final xBottom = (p.col + 0.5 - bufferWi / 2) * treeScale;
       final x = xBottom + (xTop - xBottom) * t;
-      final y = renderHt * t - renderHt / 2;
+      // Same y-up-to-y-down flip as the round-mode branch above.
+      final y = renderHt / 2 - renderHt * t;
       nodes.add(WiredNode(
         node: nodes.length + 1,
         x: x,
