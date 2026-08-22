@@ -19,6 +19,12 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          # Pinned to match the version this project's Android Gradle/Kotlin
+          # config (android/settings.gradle.kts) was validated against — a
+          # newer stable Flutter raises the minimum AGP version it accepts,
+          # which conflicts with the AGP/Kotlin pin needed to work around a
+          # file_picker Kotlin-Gradle-Plugin build failure on newer defaults.
+          flutter-version: 3.44.0
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
