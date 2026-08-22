@@ -13,6 +13,10 @@ class WiringViewPage extends StatefulWidget {
 
 class _WiringViewPageState extends State<WiringViewPage> {
   bool _showLabels = false;
+  // Default on: you wire a prop from the back, not the front/display side
+  // the model's own coordinates describe, so the mirrored view is what most
+  // people opening this screen actually need.
+  bool _showBackside = true;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +25,13 @@ class _WiringViewPageState extends State<WiringViewPage> {
       appBar: AppBar(
         title: Text(model.name),
         actions: [
+          IconButton(
+            tooltip: _showBackside
+                ? 'Showing backside (wiring) view — tap for front/display view'
+                : 'Showing front/display view — tap for backside (wiring) view',
+            icon: Icon(_showBackside ? Icons.flip_camera_android : Icons.flip_camera_android_outlined),
+            onPressed: () => setState(() => _showBackside = !_showBackside),
+          ),
           IconButton(
             tooltip: 'Toggle node number labels',
             icon: Icon(_showLabels ? Icons.label : Icons.label_outline),
@@ -39,12 +50,15 @@ class _WiringViewPageState extends State<WiringViewPage> {
                   Chip(label: Text(model.displayAs)),
                   const SizedBox(width: 12),
                   Text('${model.nodes.length} nodes', style: const TextStyle(color: Colors.white70)),
+                  const SizedBox(width: 12),
+                  Text(_showBackside ? 'Backside view' : 'Front/display view',
+                      style: const TextStyle(color: Colors.white54)),
                 ],
               ),
             ),
           ),
           Expanded(
-            child: WiringCanvas(model: model, showLabels: _showLabels),
+            child: WiringCanvas(model: model, showLabels: _showLabels, showBackside: _showBackside),
           ),
         ],
       ),

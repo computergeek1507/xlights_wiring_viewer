@@ -16,17 +16,15 @@ class ModelDetailPage extends StatefulWidget {
 
 class _ModelDetailPageState extends State<ModelDetailPage> {
   final _downloadService = XmodelDownloadService();
-  bool _loading = false;
+  // Which wiring option (index into model.wirings) is currently downloading,
+  // if any — lets each option show its own spinner without a single global
+  // loading flag disabling every other option too.
+  int? _loadingIndex;
 
-  Future<void> _viewWiring() async {
-    final url = widget.model.xmodelUrl;
-    if (url == null) {
-      _showError('This model has no downloadable .xmodel file.');
-      return;
-    }
-    setState(() => _loading = true);
+  Future<void> _viewWiring(int index, ModelWiring wiring) async {
+    setState(() => _loadingIndex = index);
     try {
-      final xml = await _downloadService.downloadXmodel(url);
+      final xml = await _downloadService.downloadXmodel(wiring.url);
       final wired = importXModel(xml);
       if (!mounted) return;
       Navigator.push(context, MaterialPageRoute(builder: (_) => WiringViewPage(model: wired)));
@@ -35,7 +33,7 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
     } catch (e) {
       _showError('$e');
     } finally {
-      if (mounted) setState(() => _loading = false);
+      if (mounted) setState(() => _loadingIndex = null);
     }
   }
 
@@ -76,17 +74,35 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
           if (model.notes != null && model.notes!.isNotEmpty) _detailRow('Notes', model.notes),
           if (model.weblink != null) _detailRow('Vendor page', model.weblink),
           const SizedBox(height: 24),
-          FilledButton.icon(
-            onPressed: _loading ? null : _viewWiring,
-            icon: _loading
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.cable),
-            label: Text(_loading ? 'Loading…' : 'View Wiring'),
-          ),
+          if (model.wirings.isEmpty)
+            const Text('This model has no downloadable .xmodel file.',
+                style: TextStyle(color: Colors.white54))
+          else ...[
+            if (model.wirings.length > 1)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: Text('Wiring options', style: TextStyle(color: Colors.white54)),
+              ),
+            for (var i = 0; i < model.wirings.length; i++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: FilledButton.icon(
+                  onPressed: _loadingIndex == null ? () => _viewWiring(i, model.wirings[i]) : null,
+                  icon: _loadingIndex == i
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.cable),
+                  label: Text(_loadingIndex == i
+                      ? 'Loading…'
+                      : model.wirings.length > 1
+                          ? (model.wirings[i].name ?? 'Wiring ${i + 1}')
+                          : 'View Wiring'),
+                ),
+              ),
+          ],
         ],
       ),
     );

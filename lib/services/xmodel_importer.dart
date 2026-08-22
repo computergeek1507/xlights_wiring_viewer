@@ -39,10 +39,6 @@ final Map<String, _Builder> _nativeGeometries = {
   'horiz matrix': buildMatrix,
   'single line': buildSingleLine,
   'arches': buildArches,
-  'tree': buildTree,
-  'tree 360': buildTree,
-  'tree flat': buildTree,
-  'tree ribbon': buildTree,
   'circle': buildCircle,
   'star': buildStar,
   'spinner': buildSpinner,
@@ -98,7 +94,17 @@ WiredModel importXModel(String xml) {
         'This is a DMX fixture model, not a pixel grid — nothing to render.');
   }
 
-  final builder = _nativeGeometries[displayAs];
+  // Some vendor exports use a shape-named root tag (`<treemodel>`,
+  // `<matrixmodel>`, ...) instead of a generic `<model DisplayAs="...">`;
+  // fall back to that when DisplayAs is missing entirely.
+  final shapeKey = displayAs.isNotEmpty
+      ? displayAs
+      : (tag.endsWith('model') ? tag.substring(0, tag.length - 'model'.length) : tag);
+
+  // Legacy files spell Tree's degree span or Flat/Ribbon style directly into
+  // DisplayAs ("Tree 120", "Tree Flat", ...) instead of separate TreeType/
+  // TreeDegrees attributes, so match on prefix rather than an exact string.
+  final builder = shapeKey.startsWith('tree') ? buildTree : _nativeGeometries[shapeKey];
   if (builder == null) {
     throw XModelImportException(
         "Unsupported model type '${root.getAttribute('DisplayAs') ?? tag}'. "

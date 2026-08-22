@@ -134,6 +134,19 @@ void main() {
     expect(model.nodes.map((n) => n.node).toSet(), Set.from(List.generate(40, (i) => i + 1)));
   });
 
+  test('Tree accepts a <treemodel> root with legacy DisplayAs="Tree <degrees>"', () {
+    // Regression case: a real vendor file (EFL Designs "Med NSR Tree") uses
+    // a <treemodel> root tag with DisplayAs="Tree 120" and no TreeType/
+    // TreeDegrees attributes at all — the degree span is only encoded in
+    // the DisplayAs string, and the root tag isn't <model>.
+    const xml = '<treemodel name="Med NSR Tree" parm1="1" parm2="150" parm3="10" '
+        'DisplayAs="Tree 120" StrandDir="Vertical" TreeBottomTopRatio="3.0" />';
+    final model = importXModel(xml);
+    expect(model.displayAs, 'Tree');
+    expect(model.nodes.length, 150);
+    expect(model.nodes.map((n) => n.node).toSet(), Set.from(List.generate(150, (i) => i + 1)));
+  });
+
   test('Circle spaces NumStrings x NodesPerString nodes evenly around a ring', () {
     const xml = '<model DisplayAs="Circle" name="C1" NumStrings="1" NodesPerString="12" />';
     final model = importXModel(xml);

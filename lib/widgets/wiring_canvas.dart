@@ -15,14 +15,20 @@ bool _isPortBoundary(int node) => node > 1 && (node - 1) % _portRunLength == 0;
 
 /// Pan/zoomable wiring diagram: a polyline connecting nodes in wiring order
 /// underneath color-by-strand dots, so the physical wiring sequence (node 1,
-/// 2, 3, ...) is directly traceable. [showLabels] is owned by the caller
-/// (the AppBar toggle on the wiring view page), not this widget, so there is
-/// one source of truth for that state.
+/// 2, 3, ...) is directly traceable. [showLabels]/[showBackside] are owned by
+/// the caller (the AppBar toggles on the wiring view page), not this widget,
+/// so there is one source of truth for that state.
 class WiringCanvas extends StatelessWidget {
   final WiredModel model;
   final bool showLabels;
+  final bool showBackside;
 
-  const WiringCanvas({super.key, required this.model, required this.showLabels});
+  const WiringCanvas({
+    super.key,
+    required this.model,
+    required this.showLabels,
+    required this.showBackside,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +40,7 @@ class WiringCanvas extends StatelessWidget {
         width: 2000,
         height: 2000,
         child: CustomPaint(
-          painter: WiringPainter(model: model, showLabels: showLabels),
+          painter: WiringPainter(model: model, showLabels: showLabels, showBackside: showBackside),
         ),
       ),
     );
@@ -44,8 +50,9 @@ class WiringCanvas extends StatelessWidget {
 class WiringPainter extends CustomPainter {
   final WiredModel model;
   final bool showLabels;
+  final bool showBackside;
 
-  WiringPainter({required this.model, required this.showLabels});
+  WiringPainter({required this.model, required this.showLabels, required this.showBackside});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -67,10 +74,15 @@ class WiringPainter extends CustomPainter {
     final originX = (size.width - drawnW) / 2;
     final originY = (size.height - drawnH) / 2;
 
-    Offset screen(WiredNode n) => Offset(
-          originX + (n.x - model.minX) * scale,
-          originY + (n.y - model.minY) * scale,
-        );
+    // xLights' layout view (and the front/display-facing DisplayAs="Custom"
+    // grid, and most native-shape formulas) describes the model as seen from
+    // the front. Wiring by hand is done from the back, which mirrors left
+    // and right — so the backside view flips x around the model's center.
+    Offset screen(WiredNode n) {
+      final localX = n.x - model.minX;
+      final x = showBackside ? model.width - localX : localX;
+      return Offset(originX + x * scale, originY + (n.y - model.minY) * scale);
+    }
 
     // Wiring path first, underneath the dots.
     final path = Path();
@@ -154,5 +166,5 @@ class WiringPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant WiringPainter old) =>
-      old.model != model || old.showLabels != showLabels;
+      old.model != model || old.showLabels != showLabels || old.showBackside != showBackside;
 }

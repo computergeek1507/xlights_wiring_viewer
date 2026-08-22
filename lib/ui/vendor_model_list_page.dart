@@ -17,6 +17,7 @@ class VendorModelListPage extends StatefulWidget {
 class _VendorModelListPageState extends State<VendorModelListPage> {
   final _service = VendorCatalogService();
   late Future<VendorModelsResult> _future;
+  String _query = '';
 
   @override
   void initState() {
@@ -51,13 +52,42 @@ class _VendorModelListPageState extends State<VendorModelListPage> {
               onRetry: () => _retry(forceRefresh: true),
             );
           }
-          return RefreshIndicator(
-            onRefresh: () async => _retry(forceRefresh: true),
-            child: ListView.separated(
-              itemCount: result.models.length,
-              separatorBuilder: (_, _) => const Divider(height: 1),
-              itemBuilder: (context, i) => _ModelTile(model: result.models[i]),
-            ),
+
+          final query = _query.trim().toLowerCase();
+          final models = query.isEmpty
+              ? result.models
+              : result.models.where((m) => m.name.toLowerCase().contains(query)).toList();
+
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Filter ${result.models.length} models…',
+                    prefixIcon: const Icon(Icons.search),
+                    isDense: true,
+                    border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+                  ),
+                  onChanged: (v) => setState(() => _query = v),
+                ),
+              ),
+              Expanded(
+                child: models.isEmpty
+                    ? const Center(
+                        child: Text('No models match that filter.',
+                            style: TextStyle(color: Colors.white54)),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: () async => _retry(forceRefresh: true),
+                        child: ListView.separated(
+                          itemCount: models.length,
+                          separatorBuilder: (_, _) => const Divider(height: 1),
+                          itemBuilder: (context, i) => _ModelTile(model: models[i]),
+                        ),
+                      ),
+              ),
+            ],
           );
         },
       ),

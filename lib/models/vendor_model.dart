@@ -1,5 +1,15 @@
 import 'package:xml/xml.dart';
 
+/// One `<wiring>` entry under a `<model>` — a model can offer several
+/// downloadable `.xmodel` variants (e.g. different accessory/pixel-count
+/// options), each with its own [url] and an optional human [name] label.
+class ModelWiring {
+  final String? name;
+  final String url;
+
+  const ModelWiring({this.name, required this.url});
+}
+
 /// One `<model>` entry from a vendor's model-inventory XML (e.g. boscoyo.xml).
 /// Third-party vendor files are inconsistent, so every field beyond [id]/[name]
 /// is optional and defensively parsed — a missing/malformed field must never
@@ -19,7 +29,7 @@ class VendorModel {
   final String? pixelSpacing;
   final String? notes;
   final String? imageFile;
-  final String? xmodelUrl;
+  final List<ModelWiring> wirings;
 
   const VendorModel({
     required this.id,
@@ -35,7 +45,7 @@ class VendorModel {
     this.pixelSpacing,
     this.notes,
     this.imageFile,
-    this.xmodelUrl,
+    this.wirings = const [],
   });
 
   static String? _text(XmlElement e, String tag) {
@@ -65,11 +75,11 @@ class VendorModel {
       pixelSpacing: _text(e, 'pixelspacing'),
       notes: _text(e, 'notes'),
       imageFile: _text(e, 'imagefile'),
-      xmodelUrl: () {
-        final wiring = e.getElement('wiring');
-        final link = wiring?.getElement('xmodellink')?.innerText.trim();
-        return (link == null || link.isEmpty) ? null : link;
-      }(),
+      wirings: [
+        for (final w in e.findElements('wiring'))
+          if (_text(w, 'xmodellink') case final url?)
+            ModelWiring(name: _text(w, 'name'), url: url),
+      ],
     );
   }
 }

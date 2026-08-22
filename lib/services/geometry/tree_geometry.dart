@@ -6,15 +6,20 @@ import '../../models/wired_model.dart';
 import 'geometry_attrs.dart';
 import 'matrix_buffer.dart';
 
-/// Builds a [WiredModel] for `DisplayAs="Tree"` (and legacy `"Tree 360"`/
-/// `"Tree Flat"`/`"Tree Ribbon"`). Tree reuses Matrix's buffer layout (see
-/// [buildMatrixBuffer]) — strand index becomes the buffer's x axis, position
-/// along the strand becomes its y axis — then projects that buffer onto a
-/// shape selected by `TreeType` (0=Round/spiral cone [default], 1=Flat,
-/// 2=Ribbon). Round mode is inherently 3D; z is dropped for a 2D front
-/// elevation, which is enough to show wiring order.
+/// Builds a [WiredModel] for `DisplayAs="Tree"` (and legacy compound values
+/// like `"Tree 360"`, `"Tree 120"`, `"Tree Flat"`, `"Tree Ribbon"` — older
+/// xLights files encode the degree span or Flat/Ribbon style directly in
+/// `DisplayAs` instead of a separate `TreeType`/`TreeDegrees` attribute).
+/// Also accepts a `<treemodel>` root, which some vendor exports use in place
+/// of a generic `<model DisplayAs="Tree ...">`. Tree reuses Matrix's buffer
+/// layout (see [buildMatrixBuffer]) — strand index becomes the buffer's x
+/// axis, position along the strand becomes its y axis — then projects that
+/// buffer onto a shape selected by `TreeType` (0=Round/spiral cone [default],
+/// 1=Flat, 2=Ribbon). Round mode is inherently 3D; z is dropped for a 2D
+/// front elevation, which is enough to show wiring order.
 WiredModel buildTree(XmlElement root) {
-  final treeType = attrInt(root, 'TreeType', fallback: 0);
+  final displayAsRaw = attrString(root, 'DisplayAs', fallback: 'Tree').toLowerCase();
+  final treeType = _treeType(root, displayAsRaw);
   final numStrings = math.max(1, attrInt(root, 'NumStrings', parmFallback: 'parm1', fallback: 1));
   final nodesPerString = math.max(1, attrInt(root, 'NodesPerString', parmFallback: 'parm2', fallback: 1));
   final strandsPerString =
@@ -37,7 +42,7 @@ WiredModel buildTree(XmlElement root) {
 
   final nodes = <WiredNode>[];
   if (treeType == 0) {
-    final treeDegrees = attrDouble(root, 'TreeDegrees', fallback: 360);
+    final treeDegrees = _treeDegrees(root, displayAsRaw);
     final treeRotationDeg = attrDouble(root, 'TreeRotation', fallback: 3.0);
     final bottomTopRatio = attrDouble(root, 'TreeBottomTopRatio', fallback: 6.0);
     final spiralRotations = attrDouble(root, 'TreeSpiralRotations', fallback: 0);
@@ -94,4 +99,29 @@ WiredModel buildTree(XmlElement root) {
     displayAs: 'Tree',
     nodes: nodes,
   );
+}
+
+/// 0=Round, 1=Flat, 2=Ribbon. Prefers the modern `TreeType` attribute;
+/// legacy files instead spell the style into `DisplayAs` ("Tree Flat",
+/// "Tree Ribbon") with no `TreeType` attribute at all.
+int _treeType(XmlElement root, String displayAsLower) {
+  final explicit = root.getAttribute('TreeType');
+  if (explicit != null && explicit.trim().isNotEmpty) {
+    return int.tryParse(explicit) ?? 0;
+  }
+  if (displayAsLower.contains('flat')) return 1;
+  if (displayAsLower.contains('ribbon')) return 2;
+  return 0;
+}
+
+/// Prefers the modern `TreeDegrees` attribute; legacy files instead encode
+/// the angular span as a trailing number in `DisplayAs` (e.g. "Tree 120" for
+/// a 120° spread), with no `TreeDegrees` attribute at all.
+double _treeDegrees(XmlElement root, String displayAsLower) {
+  final explicit = root.getAttribute('TreeDegrees');
+  if (explicit != null && explicit.trim().isNotEmpty) {
+    return double.tryParse(explicit) ?? 360;
+  }
+  final match = RegExp(r'(\d+(?:\.\d+)?)').firstMatch(displayAsLower);
+  return match != null ? double.parse(match.group(1)!) : 360;
 }

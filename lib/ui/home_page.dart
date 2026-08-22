@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../services/rgbeffects_importer.dart';
 import '../services/xmodel_importer.dart';
+import 'rgbeffects_model_list_page.dart';
 import 'vendor_list_page.dart';
 import 'wiring_view_page.dart';
 
@@ -30,6 +32,38 @@ class HomePage extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => WiringViewPage(model: model)),
+      );
+    } on XModelImportException catch (e) {
+      if (context.mounted) _showError(context, e.message);
+    } catch (e) {
+      if (context.mounted) _showError(context, 'Could not read file: $e');
+    }
+  }
+
+  Future<void> _loadRgbEffects(BuildContext context) async {
+    final result = await FilePicker.pickFiles(
+      dialogTitle: 'Open xlights_rgbeffects.xml',
+      type: FileType.custom,
+      allowedExtensions: const ['xml'],
+      withData: true,
+    );
+    final file = result?.files.single;
+    if (file?.bytes == null) return;
+    if (!context.mounted) return;
+
+    try {
+      final xml = utf8.decode(file!.bytes!);
+      final entries = parseRgbEffectsModelList(xml);
+      if (entries.isEmpty) {
+        _showError(context, 'No models found in this file.');
+        return;
+      }
+      if (!context.mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RgbEffectsModelListPage(fileName: file.name, entries: entries),
+        ),
       );
     } on XModelImportException catch (e) {
       if (context.mounted) _showError(context, e.message);
@@ -77,6 +111,12 @@ class HomePage extends StatelessWidget {
                   onPressed: () => _loadLocalFile(context),
                   icon: const Icon(Icons.folder_open),
                   label: const Text('Load .xmodel from device'),
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: () => _loadRgbEffects(context),
+                  icon: const Icon(Icons.view_list),
+                  label: const Text('Load xlights_rgbeffects.xml'),
                 ),
               ],
             ),
