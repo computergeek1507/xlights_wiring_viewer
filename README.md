@@ -33,10 +33,10 @@ https://wiring.scottnation.com/, which hosts the proxy itself.
 | Custom Model | full grid support (compressed + legacy formats) |
 | Matrix | zigzag + alternate-node layouts |
 | Single Line | |
-| Arches | single/multi-arch |
+| Arches | single/multi-arch, layered/concentric (`LayerSizes`) |
 | Tree | round (cone), flat, ribbon |
-| Circle | single ring |
-| Star | single layer |
+| Circle | single ring, multi-ring (`LayerSizes`) |
+| Star | single layer, layered/concentric (`LayerSizes`) |
 | Spinner | |
 
 Anything else (Wreath, Candy Cane, Icicles, Sphere, Window Frame, DMX
@@ -86,9 +86,6 @@ proxying is needed there.
 
 ## Other known limitations
 
-- Layered/concentric Arches and multi-ring Circles (`LayerSizes` in xLights)
-  fall back to the single-layer geometry. Layered/nested Stars *are*
-  supported.
 - iOS isn't build-tested here (Windows dev machine, no Apple signing) but the
   project scaffold and every dependency are iOS-compatible by construction.
 
