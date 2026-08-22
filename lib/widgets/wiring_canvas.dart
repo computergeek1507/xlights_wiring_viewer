@@ -9,7 +9,10 @@ import 'wiring_palette.dart';
 // new physical run — most pixel controllers/ports cap out around 50 pixels,
 // so this is a useful "new port starts here" landmark while wiring by hand.
 const _portRunLength = 50;
-const _portMarkerColor = Color(0xFFFFC107);
+const _portMarkerColorDark = Color(0xFFFFC107);
+const _portMarkerColorPrint = Color(0xFFF57F17);
+const _canvasBackgroundDark = Color(0xFF101014);
+const _canvasBackgroundPrint = Colors.white;
 
 bool _isPortBoundary(int node) => node > 1 && (node - 1) % _portRunLength == 0;
 
@@ -52,11 +55,26 @@ class WiringPainter extends CustomPainter {
   final bool showLabels;
   final bool showBackside;
 
-  WiringPainter({required this.model, required this.showLabels, required this.showBackside});
+  /// White background + darker palette/line/label colors for a printed
+  /// page, instead of the app's normal dark canvas. Only
+  /// [wiring_print_service.dart] sets this true — the on-screen view always
+  /// uses the dark theme.
+  final bool forPrint;
+
+  WiringPainter({
+    required this.model,
+    required this.showLabels,
+    required this.showBackside,
+    this.forPrint = false,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Offset.zero & size, Paint()..color = const Color(0xFF101014));
+    final background = forPrint ? _canvasBackgroundPrint : _canvasBackgroundDark;
+    final lineColor = forPrint ? Colors.black : Colors.white;
+    final portMarkerColor = forPrint ? _portMarkerColorPrint : _portMarkerColorDark;
+
+    canvas.drawRect(Offset.zero & size, Paint()..color = background);
 
     final nodes = model.nodes;
     if (nodes.isEmpty) return;
@@ -99,13 +117,15 @@ class WiringPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.2
-        ..color = Colors.white.withAlpha(90),
+        ..color = lineColor.withAlpha(forPrint ? 110 : 90),
     );
 
     const dotRadius = 4.0;
     final dotPaint = Paint()..style = PaintingStyle.fill;
     for (final n in nodes) {
-      dotPaint.color = _isPortBoundary(n.node) ? _portMarkerColor : colorForStrand(n.strandIndex);
+      dotPaint.color = _isPortBoundary(n.node)
+          ? portMarkerColor
+          : colorForStrand(n.strandIndex, forPrint: forPrint);
       canvas.drawCircle(screen(n), dotRadius, dotPaint);
     }
 
@@ -117,12 +137,12 @@ class WiringPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2
-        ..color = Colors.white,
+        ..color = lineColor,
     );
 
     // Mark the last node (end of the wiring chain) with an octagon.
     final endOctagon = _octagonPath(screen(nodes.last), dotRadius + 7);
-    canvas.drawPath(endOctagon, Paint()..style = PaintingStyle.fill..color = _portMarkerColor);
+    canvas.drawPath(endOctagon, Paint()..style = PaintingStyle.fill..color = portMarkerColor);
     canvas.drawPath(
       endOctagon,
       Paint()
@@ -137,7 +157,7 @@ class WiringPainter extends CustomPainter {
         final tp = TextPainter(
           text: TextSpan(
             text: '${n.node}',
-            style: const TextStyle(color: Colors.white, fontSize: 10),
+            style: TextStyle(color: lineColor, fontSize: 10),
           ),
           textDirection: TextDirection.ltr,
         )..layout();
@@ -166,5 +186,8 @@ class WiringPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant WiringPainter old) =>
-      old.model != model || old.showLabels != showLabels || old.showBackside != showBackside;
+      old.model != model ||
+      old.showLabels != showLabels ||
+      old.showBackside != showBackside ||
+      old.forPrint != forPrint;
 }

@@ -56,8 +56,12 @@ Future<Uint8List> _renderPng(
   const size = 1600.0;
   final recorder = PictureRecorder();
   final canvas = Canvas(recorder);
-  WiringPainter(model: model, showLabels: showLabels, showBackside: showBackside)
-      .paint(canvas, const Size(size, size));
+  WiringPainter(
+    model: model,
+    showLabels: showLabels,
+    showBackside: showBackside,
+    forPrint: true,
+  ).paint(canvas, const Size(size, size));
   final picture = recorder.endRecording();
   final image = await picture.toImage(size.toInt(), size.toInt());
   final byteData = await image.toByteData(format: ImageByteFormat.png);
