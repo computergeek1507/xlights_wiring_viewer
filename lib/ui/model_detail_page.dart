@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/vendor_model.dart';
 import '../services/xmodel_download_service.dart';
@@ -44,6 +45,13 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
     );
   }
 
+  Future<void> _openWeblink(String url) async {
+    final uri = Uri.tryParse(url);
+    if (uri == null || !await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      _showError('Could not open $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final model = widget.model;
@@ -72,7 +80,7 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
           _detailRow('Pixel description', model.pixelDescription),
           _detailRow('Pixel spacing', model.pixelSpacing),
           if (model.notes != null && model.notes!.isNotEmpty) _detailRow('Notes', model.notes),
-          if (model.weblink != null) _detailRow('Vendor page', model.weblink),
+          if (model.weblink != null) _weblinkRow(model.weblink!),
           const SizedBox(height: 24),
           if (model.wirings.isEmpty)
             const Text('This model has no downloadable .xmodel file.',
@@ -103,6 +111,40 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
                 ),
               ),
           ],
+        ],
+      ),
+    );
+  }
+
+  Widget _weblinkRow(String url) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            width: 130,
+            child: Text('Vendor page', style: TextStyle(color: Colors.white54)),
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: () => _openWeblink(url),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Text(
+                      url,
+                      style: const TextStyle(color: Colors.lightBlueAccent, decoration: TextDecoration.underline),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.open_in_new, size: 16, color: Colors.lightBlueAccent),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
