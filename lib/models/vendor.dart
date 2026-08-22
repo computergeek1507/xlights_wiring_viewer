@@ -1,9 +1,7 @@
 import 'package:xml/xml.dart';
 
 /// DMX fixtures/models aren't pixel models this app can render — there's
-/// nothing useful to browse into for these vendors. Shared by
-/// `VendorCatalogService` and `tool/mirror_vendor_catalog.dart` so the same
-/// vendors are skipped both live and when mirroring.
+/// nothing useful to browse into for these vendors.
 bool isDmxVendor(String vendorName) => vendorName.toLowerCase().contains('dmx');
 
 /// One entry from xLights' `xlights_vendors.xml` (the `<vendor>` elements —

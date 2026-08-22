@@ -7,7 +7,9 @@ or load a `.xmodel` file directly, and see a pan/zoomable diagram tracing node
 hand in the garage.
 
 **Live web build:** https://computergeek1507.github.io/xlights_wiring_viewer/
-(local file loading only — see [Known limitations](#known-limitations)).
+(full vendor browsing works via a CORS proxy — see
+[Web and the CORS proxy](#web-and-the-cors-proxy)). Also mirrored at
+https://wiring.scottnation.com/, which hosts the proxy itself.
 
 ## Features
 
@@ -57,16 +59,36 @@ Android's Gradle/Kotlin versions are pinned in `android/settings.gradle.kts`
 build. CI (`.github/workflows/android.yml`) pins the same Flutter version
 (3.44.0) for the same reason.
 
-## Known limitations
+## Web and the CORS proxy
 
-- **Vendor browsing doesn't work on the web build.** Each vendor's model
-  inventory is hosted on their own independent domain, and none of them send
-  CORS headers permitting cross-origin browser fetches. This isn't fixable
-  from the app itself — it would need a server-side proxy. The web build
-  still works for the local-file-load flow and the top-level vendor list
-  (hosted on GitHub, which does allow CORS).
-- Layered/concentric Arches, multi-ring Circles, and multi-layer Stars
-  (`LayerSizes` in xLights) fall back to the single-layer geometry.
+Each vendor's model inventory (and every `.xmodel` file) is hosted on that
+vendor's own independent domain, and none of them send CORS headers
+permitting cross-origin browser fetches — a browser build can't fetch those
+directly. `xmodel-proxy.php` (repo root) is a small server-side script,
+deployed on the app operator's own PHP host, that fetches the requested URL
+server-side and re-serves it with a CORS header; `lib/services/
+web_cors_proxy.dart` routes every vendor/model fetch through it on web
+(`kIsWeb`), unchanged on other platforms since they never hit CORS. The
+target URL is passed base64url-encoded (`?u=...`, not a literal
+`?url=http://...`) because shared-hosting WAFs (ModSecurity and similar,
+common on cPanel) routinely block a literal URL appearing in a query string
+as a blanket anti-SSRF rule.
+
+`$ALLOWED_HOSTS` in the proxy script is an allowlist of known vendor
+domains — it's what keeps the proxy from being an open proxy, not the CORS
+origin check (which is deliberately `*`, since the proxy only ever relays
+public vendor-catalog data). Update that list if xLights adds a vendor (see
+`xlights_vendors.xml`).
+
+The top-level vendor list itself (`xlights_vendors.xml`) is fetched directly
+even on web — it's hosted on GitHub, which does send CORS headers, so no
+proxying is needed there.
+
+## Other known limitations
+
+- Layered/concentric Arches and multi-ring Circles (`LayerSizes` in xLights)
+  fall back to the single-layer geometry. Layered/nested Stars *are*
+  supported.
 - iOS isn't build-tested here (Windows dev machine, no Apple signing) but the
   project scaffold and every dependency are iOS-compatible by construction.
 

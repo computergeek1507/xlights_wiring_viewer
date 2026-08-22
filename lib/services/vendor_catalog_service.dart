@@ -1,38 +1,14 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart';
 
 import '../models/vendor.dart';
 import '../models/vendor_model.dart';
+import 'web_cors_proxy.dart';
 
 const _vendorsUrl =
     'https://raw.githubusercontent.com/xLightsSequencer/xLights/master/download/xlights_vendors.xml';
 const _fetchTimeout = Duration(seconds: 10);
-
-/// Vendor sites don't send CORS headers, so a browser can't fetch a
-/// vendor's model inventory directly — only on web. `tool/mirror_vendor_
-/// catalog.dart` mirrors every vendor's catalog into `web/data/` on a
-/// schedule (see `.github/workflows/mirror-vendors.yml`), served same-
-/// origin by GitHub Pages, so this manifest maps each vendor's real
-/// `inventoryUrl` to that same-origin mirrored copy. Non-web platforms
-/// never hit CORS and always use the live URL directly.
-Future<Map<String, String>?> _loadMirrorManifest() async {
-  if (!kIsWeb) return null;
-  try {
-    final url = Uri.base.resolve('data/manifest.json');
-    final response = await http.get(url).timeout(_fetchTimeout);
-    if (response.statusCode != 200) return null;
-    final decoded = jsonDecode(response.body) as Map<String, dynamic>;
-    final vendors = decoded['vendors'] as Map<String, dynamic>?;
-    if (vendors == null) return null;
-    return vendors.map((k, v) => MapEntry(k, v as String));
-  } catch (_) {
-    return null;
-  }
-}
 
 /// Result of fetching one vendor's model inventory: either [models] (which
 /// may still be a partial list if some `<model>` entries were malformed) or
@@ -48,7 +24,9 @@ class VendorModelsResult {
 /// Fetches and caches xLights' vendor catalog and each vendor's model
 /// inventory. Network failures fall back to the last cached copy so the app
 /// stays usable offline; a vendor whose own fetch fails does not affect any
-/// other vendor.
+/// other vendor. On web, per-vendor fetches go through [maybeProxied] since
+/// vendor sites don't send CORS headers — GitHub's raw content does, so the
+/// top-level vendor list is fetched directly even on web.
 class VendorCatalogService {
   static const _vendorsCacheKey = 'cache.vendors.xml';
 
@@ -102,12 +80,9 @@ class VendorCatalogService {
       xml = prefs.getString(cacheKey);
     }
     if (xml == null || forceRefresh) {
-      final manifest = await _loadMirrorManifest();
-      final mirroredPath = manifest?[vendor.inventoryUrl];
-      final fetchUrl =
-          mirroredPath != null ? Uri.base.resolve(mirroredPath) : Uri.parse(vendor.inventoryUrl);
       try {
-        final response = await http.get(fetchUrl).timeout(_fetchTimeout);
+        final response =
+            await http.get(maybeProxied(vendor.inventoryUrl)).timeout(_fetchTimeout);
         if (response.statusCode == 200) {
           xml = response.body;
           await prefs.setString(cacheKey, xml);

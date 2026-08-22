@@ -129,6 +129,32 @@ void main() {
     expect(model.nodes.map((n) => n.node).toSet(), Set.from(List.generate(10, (i) => i + 1)));
   });
 
+  test('Arches LayerSizes produces nested concentric layers', () {
+    // Regression case: a real vendor file (EFL Designs, 3 Row Arches) uses
+    // <archesmodel ... LayerSizes="50,50,50" Hollow="89">.
+    const xml = '<archesmodel name="Arches" parm1="1" parm2="150" parm3="1" '
+        'DisplayAs="Arches" LayerSizes="50,50,50" Hollow="89" Arc="180" />';
+    final model = importXModel(xml);
+    expect(model.nodes.length, 150);
+    expect(model.nodes.sublist(0, 50).every((n) => n.strandIndex == 0), isTrue);
+    expect(model.nodes.sublist(50, 100).every((n) => n.strandIndex == 1), isTrue);
+    expect(model.nodes.sublist(100, 150).every((n) => n.strandIndex == 2), isTrue);
+
+    // Layers nest at 3 different (close, since Hollow=89%) radii sharing one
+    // common center/shift: the outermost layer's peak sits at the smallest y
+    // (closest to the top of the canvas); each smaller inner layer's peak
+    // sits progressively lower (larger y), since its own arc doesn't reach
+    // as high — never AT the same y as another layer (which independent
+    // per-layer zeroing would incorrectly produce).
+    double peakY(Iterable<WiredNode> ns) => ns.map((n) => n.y).reduce((a, b) => a < b ? a : b);
+    final y0 = peakY(model.nodes.sublist(0, 50)); // innermost (smallest radius)
+    final y1 = peakY(model.nodes.sublist(50, 100));
+    final y2 = peakY(model.nodes.sublist(100, 150)); // outermost (full radius)
+    expect(y0, greaterThan(y1));
+    expect(y1, greaterThan(y2));
+    expect(y2, closeTo(0, 0.5)); // outermost defines the shared shift
+  });
+
   test('Tree (round) produces NumStrings*StrandsPerString x NodesPerString/StrandsPerString nodes', () {
     const xml = '<model DisplayAs="Tree" name="T1" TreeType="0" '
         'NumStrings="4" NodesPerString="10" StrandsPerString="1" />';
@@ -183,6 +209,25 @@ void main() {
     for (final n in model.nodes) {
       final r = (n.x * n.x + n.y * n.y);
       expect(r, closeTo(36, 1e-6));
+    }
+  });
+
+  test('Circle LayerSizes produces concentric rings, innermost first', () {
+    const xml = '<model DisplayAs="Circle" name="C1" '
+        'LayerSizes="6,12" CenterPercent="50" NumStrings="1" NodesPerString="12" />';
+    final model = importXModel(xml);
+    expect(model.nodes.length, 18);
+    expect(model.nodes.sublist(0, 6).every((n) => n.strandIndex == 0), isTrue);
+    expect(model.nodes.sublist(6, 18).every((n) => n.strandIndex == 1), isTrue);
+
+    double dist(WiredNode n) => math.sqrt(n.x * n.x + n.y * n.y);
+    // Outer ring uses its own count (12) as the radius; inner ring is 50%
+    // of that.
+    for (final n in model.nodes.sublist(0, 6)) {
+      expect(dist(n), closeTo(3, 0.01));
+    }
+    for (final n in model.nodes.sublist(6, 18)) {
+      expect(dist(n), closeTo(6, 0.01));
     }
   });
 
