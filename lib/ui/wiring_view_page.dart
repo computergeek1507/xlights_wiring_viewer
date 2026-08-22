@@ -17,19 +17,14 @@ class _WiringViewPageState extends State<WiringViewPage> {
   @override
   Widget build(BuildContext context) {
     final model = widget.model;
-    final labelsAvailable = model.nodes.length <= WiringPainter.labelThreshold;
     return Scaffold(
       appBar: AppBar(
         title: Text(model.name),
         actions: [
           IconButton(
-            tooltip: labelsAvailable
-                ? 'Toggle node number labels'
-                : 'Labels hidden — too many nodes (${model.nodes.length})',
+            tooltip: 'Toggle node number labels',
             icon: Icon(_showLabels ? Icons.label : Icons.label_outline),
-            onPressed: labelsAvailable
-                ? () => setState(() => _showLabels = !_showLabels)
-                : null,
+            onPressed: () => setState(() => _showLabels = !_showLabels),
           ),
         ],
       ),

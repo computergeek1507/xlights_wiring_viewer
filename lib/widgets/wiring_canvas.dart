@@ -1,7 +1,17 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../models/wired_model.dart';
 import 'wiring_palette.dart';
+
+// Every 50th node after the first (51, 101, 151, ...) marks the start of a
+// new physical run — most pixel controllers/ports cap out around 50 pixels,
+// so this is a useful "new port starts here" landmark while wiring by hand.
+const _portRunLength = 50;
+const _portMarkerColor = Color(0xFFFFC107);
+
+bool _isPortBoundary(int node) => node > 1 && (node - 1) % _portRunLength == 0;
 
 /// Pan/zoomable wiring diagram: a polyline connecting nodes in wiring order
 /// underneath color-by-strand dots, so the physical wiring sequence (node 1,
@@ -34,10 +44,6 @@ class WiringCanvas extends StatelessWidget {
 class WiringPainter extends CustomPainter {
   final WiredModel model;
   final bool showLabels;
-
-  // Above this many nodes, labels are auto-suppressed even if requested —
-  // otherwise dense props (100+ pixels) turn into an unreadable smear.
-  static const labelThreshold = 150;
 
   WiringPainter({required this.model, required this.showLabels});
 
@@ -87,7 +93,7 @@ class WiringPainter extends CustomPainter {
     const dotRadius = 4.0;
     final dotPaint = Paint()..style = PaintingStyle.fill;
     for (final n in nodes) {
-      dotPaint.color = colorForStrand(n.strandIndex);
+      dotPaint.color = _isPortBoundary(n.node) ? _portMarkerColor : colorForStrand(n.strandIndex);
       canvas.drawCircle(screen(n), dotRadius, dotPaint);
     }
 
@@ -102,7 +108,18 @@ class WiringPainter extends CustomPainter {
         ..color = Colors.white,
     );
 
-    if (showLabels && nodes.length <= labelThreshold) {
+    // Mark the last node (end of the wiring chain) with an octagon.
+    final endOctagon = _octagonPath(screen(nodes.last), dotRadius + 7);
+    canvas.drawPath(endOctagon, Paint()..style = PaintingStyle.fill..color = _portMarkerColor);
+    canvas.drawPath(
+      endOctagon,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5
+        ..color = Colors.black54,
+    );
+
+    if (showLabels) {
       for (final n in nodes) {
         final p = screen(n);
         final tp = TextPainter(
@@ -115,6 +132,24 @@ class WiringPainter extends CustomPainter {
         tp.paint(canvas, p + Offset(dotRadius + 2, -tp.height / 2));
       }
     }
+  }
+
+  /// A regular octagon (flat edge on top, like a stop sign) centered at
+  /// [center] with the given [radius].
+  Path _octagonPath(Offset center, double radius) {
+    final path = Path();
+    for (var i = 0; i < 8; i++) {
+      final angle = -math.pi / 2 + math.pi / 8 + i * (math.pi / 4);
+      final x = center.dx + radius * math.cos(angle);
+      final y = center.dy + radius * math.sin(angle);
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
+    }
+    path.close();
+    return path;
   }
 
   @override
