@@ -1,0 +1,491 @@
+<modelinventory>
+  <vendor>
+    <name>Build A Light Show</name>
+    <contact>help@buildalightshow.com</contact>
+    <email>help@buildalightshow.com</email>
+    <phone>N/A</phone>
+    <website>https://www.buildalightshow.com</website>
+    <facebook>https://www.facebook.com/buildalightshow</facebook>
+    <notes></notes>
+    <logolink><![CDATA[https://buildalightshow.com/downloads/xLightsLogo.jpg]]></logolink>
+  </vendor>
+  <categories>
+    <category>
+      <id>2</id>
+      <name>Christmas</name>
+    </category>
+    <category>
+      <id>3</id>
+      <name>Halloween</name>
+    </category>
+    <category>
+      <id>4</id>
+      <name>Selfie Stuff</name>
+    </category>
+    <category>
+      <id>5</id>
+      <name>Other/Misc</name>
+    </category>
+  </categories>
+  <models>
+    <model>
+      <id>2</id>
+      <categoryid>4</categoryid>
+      <categoryid>2</categoryid>
+      <name>sELFie</name>
+      <type>Selfie Stuff</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1278-263-the-selfie-elf.html#/26-colour-black]]></weblink>
+      <material>Coro</material>
+      <width>50" (127cm)</width>
+      <height>100" (254cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>350</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2215-large_default/the-selfie-elf.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/sELFie.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>3</id>
+      <categoryid>4</categoryid>
+      <categoryid>2</categoryid>
+      <name>Frankies Angel Wings</name>
+      <type>Selfie Stuff</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1227-189-frankies-angel-wings.html#/26-colour-black]]></weblink>
+      <material>Coro</material>
+      <width>60" (152cm)</width>
+      <height>90" (229cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>300</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2113-large_default/frankies-angel-wings.jpg]]></imagefile>
+      <notes>300 pixels per wing</notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/Frankieswings.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>4</id>
+      <categoryid>4</categoryid>
+      <categoryid>2</categoryid>
+      <name>Hawkman Wings</name>
+      <type>Selfie Stuff</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1228-192-hawk-men-wings.html#/26-colour-black]]></weblink>
+      <material>Coro</material>
+      <width>90" (229cm)</width>
+      <height>60" (152cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>425</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2117-large_default/hawk-men-wings.jpg]]></imagefile>
+      <notes>425 Pixels per wing</notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/Hawkmenwings.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>5</id>
+      <categoryid>5</categoryid>
+      <name>Small Heart</name>
+      <type>Other</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1269-valentines-day-heart-pack-.html]]></weblink>
+      <material>Coro</material>
+      <width>24" (60cm)</width>
+      <height>24" (60cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>25</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2204-large_default/valentines-day-heart-pack-.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/SmallHeart.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>6</id>
+      <categoryid>5</categoryid>
+      <name>Large Heart</name>
+      <type>Other</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1269-valentines-day-heart-pack-.html]]></weblink>
+      <material>Coro</material>
+      <width>24" (60cm)</width>
+      <height>24" (60cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>50</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2204-large_default/valentines-day-heart-pack-.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/LargeHeart.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>7</id>
+      <categoryid>5</categoryid>
+      <name>Large Heart with Love</name>
+      <type>Other</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1269-valentines-day-heart-pack-.html]]></weblink>
+      <material>Coro</material>
+      <width>30" (75cm)</width>
+      <height>30" (75cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>75</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2204-large_default/valentines-day-heart-pack-.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/LargeHeartWithLove.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>8</id>
+      <categoryid>5</categoryid>
+      <name>Fluffy The Unicorn</name>
+      <type>Other</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1194-fluffy-the-unicorn.html]]></weblink>
+      <material>Coro</material>
+      <width>36" (90cm)</width>
+      <height>36" (93cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>357</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2051-large_default/fluffy-the-unicorn.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/Unicorn.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>9</id>
+      <categoryid>5</categoryid>
+      <name>Remembrance Poppy (filled)</name>
+      <type>Other</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1203-remembrance-poppy-filled.html]]></weblink>
+      <material>Coro</material>
+      <width>27" (55cm)</width>
+      <height>18" (45cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>132</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2064-large_default/remembrance-poppy-filled.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/poppy-filled.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>10</id>
+      <categoryid>5</categoryid>
+      <name>Remembrance Poppy </name>
+      <type>Other</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1203-remembrance-poppy-filled.html]]></weblink>
+      <material>Coro</material>
+      <width>27" (55cm)</width>
+      <height>18" (45cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>75</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2062-large_default/remembrance-poppy-unfilled.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/poppy-unfilled.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>11</id>
+      <categoryid>3</categoryid>
+      <name>Campbell Cauldron</name>
+      <type>Halloween</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1219-the-campbell-cauldron.html]]></weblink>
+      <material>Coro</material>
+      <width>45" (113cm)</width>
+      <height>36" (91cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>698</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2089-large_default/the-campbell-cauldron.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/campbell-cauldron.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>12</id>
+      <categoryid>2</categoryid>
+      <name>Insane Spinner Wreath</name>
+      <type>Christmas</type>
+      <weblink><![CDATA[https://buildalightshow.com/spinners-and-wreaths/1835-insane-spinner-wreath.html]]></weblink>
+      <material>Coro</material>
+      <width>43" (108cm)</width>
+      <height>43" (108cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>560</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/3391-large_default/insane-spinner-wreath.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/insanespinnerwreath.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>13</id>
+      <categoryid>5</categoryid>
+      <name>Cheeky Chick</name>
+      <type>Other</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1291-274-cheeky-chick.html#/27-colour-white]]></weblink>
+      <material>Coro</material>
+      <width>36" (80cm)</width>
+      <height>48" (120cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>300</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2235-large_default/cheeky-chick.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/CheekyChick.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>14</id>
+      <categoryid>2</categoryid>
+      <name>Insane Baby Spinner</name>
+      <type>Christmas</type>
+      <weblink><![CDATA[https://buildalightshow.com/spinners-and-wreaths/1834-insane-baby-spinner-.html]]></weblink>
+      <material>Coro</material>
+      <width>13" (34cm)</width>
+      <height>13" (34cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>156</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/3390-large_default/insane-baby-spinner-.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/insanebabyspinner.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>15</id>
+      <categoryid>3</categoryid>
+      <name>Jinny The Witch</name>
+      <type>Halloween</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1321-jinny-the-witch.html]]></weblink>
+      <material>Coro</material>
+      <width>53" (132cm)</width>
+      <height>37" (92cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>275</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2276-large_default/jinny-the-witch.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/JinnyTheWitch.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>16</id>
+      <categoryid>3</categoryid>
+      <name>Gothic Gate</name>
+      <type>Halloween</type>
+      <weblink><![CDATA[https://buildalightshow.com/gothic-collection/1337-gothic-gate.html]]></weblink>
+      <material>Coro</material>
+      <width>40" (101cm)</width>
+      <height>31" (78cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>358</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2313-large_default/gothic-gate.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/Gothic-Gate.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>17</id>
+      <categoryid>3</categoryid>
+      <name>Gothic Arch</name>
+      <type>Halloween</type>
+      <weblink><![CDATA[https://buildalightshow.com/gothic-collection/1336-gothic-arch.html]]></weblink>
+      <material>Coro</material>
+      <width>48" (120cm)</width>
+      <height>98" (245cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>890</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2308-large_default/gothic-arch.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/Gothic-Arch.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>18</id>
+      <categoryid>3</categoryid>
+      <name>Gothic Fence</name>
+      <type>Halloween</type>
+      <weblink><![CDATA[https://buildalightshow.com/gothic-collection/1338-gothic-fence.html]]></weblink>
+      <material>Coro</material>
+      <width>41" (103cm)</width>
+      <height>39" (98cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>239</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2319-large_default/gothic-fence.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/Gothic-Fence.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>19</id>
+      <categoryid>3</categoryid>
+      <name>Gothic Fence Extension</name>
+      <type>Halloween</type>
+      <weblink><![CDATA[https://buildalightshow.com/gothic-collection/1339-gothic-fence-extension.html]]></weblink>
+      <material>Coro</material>
+      <width>41" (103cm)</width>
+      <height>36" (90cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>217</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2325-large_default/gothic-fence-extension.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/Gothic-Fence-Extension.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>20</id>
+      <categoryid>3</categoryid>
+      <name>Gothic Gargoyle</name>
+      <type>Halloween</type>
+      <weblink><![CDATA[https://buildalightshow.com/gothic-collection/1340-gothic-gargoyle.html]]></weblink>
+      <material>Coro</material>
+      <width>35" (87cm)</width>
+      <height>23" (57cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>600</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2331-large_default/gothic-gargoyle.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/Gothic-Gargoyle.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>21</id>
+      <categoryid>3</categoryid>
+      <name>Gothic Bush</name>
+      <type>Halloween</type>
+      <weblink><![CDATA[https://buildalightshow.com/gothic-collection/1342-gothic-bush.html]]></weblink>
+      <material>Coro</material>
+      <width>16" (39cm)</width>
+      <height>39" (116cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>175</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2340-large_default/gothic-bush.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/Gothic-Bush.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>22</id>
+      <categoryid>3</categoryid>
+      <name>Gothic Lamp Post</name>
+      <type>Halloween</type>
+      <weblink><![CDATA[https://buildalightshow.com/gothic-collection/1341-gothic-lamp-post.html]]></weblink>
+      <material>Coro</material>
+      <width>20" (50cm)</width>
+      <height>95" (236cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>400</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2334-large_default/gothic-lamp-post.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/Gothic-LampPost.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>23</id>
+      <categoryid>2</categoryid>
+      <name>The Insane Cane</name>
+      <type>Christmas</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1344-323-insane-cane-small.html#/26-colour-black]]></weblink>
+      <material>Coro</material>
+      <width>12" (30cm)</width>
+      <height>36" (110cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>189</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2342-large_default/insane-cane-small.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/TheInsaneCaneSmall.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+    <model>
+      <id>24</id>
+      <categoryid>2</categoryid>
+      <name>The Insane Pole 4ft</name>
+      <type>Christmas</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1346-328-insane-pole-4ft.html#/26-colour-black]]></weblink>
+      <material>Coro</material>
+      <width>8" (21cm)</width>
+      <height>47" (120cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>157</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2347-large_default/insane-pole-4ft.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/TheInsanePole4ft.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+<model>
+      <id>25</id>
+      <categoryid>5</categoryid>
+      <name>Donation Sign</name>
+      <type>Other</type>
+      <weblink><![CDATA[https://buildalightshow.com/build-a-light-show-coro/1513-donations-sign.html]]></weblink>
+      <material>Coro</material>
+      <width>43" (110cm)</width>
+      <height>10" (25cm)</height>
+      <thickness>10mm</thickness>
+      <pixelcount>200</pixelcount>
+      <pixeldescription>12mm bullet</pixeldescription>
+      <pixelspacing>4" (10cm)</pixelspacing>
+      <imagefile><![CDATA[https://buildalightshow.com/2844-large_default/donations-sign.jpg]]></imagefile>
+      <notes></notes>
+      <wiring>
+        <xmodellink><![CDATA[https://buildalightshow.com/downloads/Donations.xmodel]]></xmodellink>
+      </wiring>
+    </model>
+  </models>
+</modelinventory>
