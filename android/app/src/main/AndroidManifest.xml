@@ -1,4 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Release builds don't get this injected automatically the way debug
+         builds do — without it, every http/https fetch (vendor catalog,
+         .xmodel downloads, thumbnails) fails silently on a real device. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="xlights_wiring_viewer"
         android:name="${applicationName}"
