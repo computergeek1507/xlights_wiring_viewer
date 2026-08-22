@@ -46,6 +46,9 @@ dependencies:
   # Offline cache of the vendor/model list XML.
   shared_preferences: ^2.3.2
   path_provider: ^2.1.4
+  # Render the wiring diagram to PDF and hand it to the platform print dialog.
+  printing: ^5.13.4
+  pdf: ^3.11.1
 
 dev_dependencies:
   flutter_test:

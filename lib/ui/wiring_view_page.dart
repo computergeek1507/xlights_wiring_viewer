@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/wired_model.dart';
+import '../services/wiring_print_service.dart';
 import '../widgets/wiring_canvas.dart';
 
 class WiringViewPage extends StatefulWidget {
@@ -17,6 +18,22 @@ class _WiringViewPageState extends State<WiringViewPage> {
   // the model's own coordinates describe, so the mirrored view is what most
   // people opening this screen actually need.
   bool _showBackside = true;
+  bool _printing = false;
+
+  Future<void> _print() async {
+    setState(() => _printing = true);
+    try {
+      await printWiringDiagram(widget.model, showLabels: _showLabels, showBackside: _showBackside);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not print: $e'), backgroundColor: Colors.red.shade700),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _printing = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +53,17 @@ class _WiringViewPageState extends State<WiringViewPage> {
             tooltip: 'Toggle node number labels',
             icon: Icon(_showLabels ? Icons.label : Icons.label_outline),
             onPressed: () => setState(() => _showLabels = !_showLabels),
+          ),
+          IconButton(
+            tooltip: 'Print wiring diagram',
+            icon: _printing
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.print),
+            onPressed: _printing ? null : _print,
           ),
         ],
       ),
