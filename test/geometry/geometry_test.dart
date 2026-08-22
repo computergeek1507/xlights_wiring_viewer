@@ -150,6 +150,18 @@ void main() {
     expect(model.nodes.first.y, greaterThan(model.nodes.last.y));
   });
 
+  test('Tree StartSide="T" starts wiring at the top instead of the bottom', () {
+    // Regression: StartSide was documented but never actually read for
+    // Matrix/Tree — a real vendor file ("Med NSR Tree", StartSide="T")
+    // wired node 1 at the bottom when it should start at the top.
+    const xml = '<model DisplayAs="Tree" name="T1" TreeType="0" StartSide="T" '
+        'NumStrings="1" NodesPerString="10" StrandsPerString="1" TreeBottomTopRatio="6" />';
+    final model = importXModel(xml);
+    // Reversed from the StartSide="B" (default) case above: node 1 is now
+    // at the narrow top (smallest y), the last node at the wide base.
+    expect(model.nodes.first.y, lessThan(model.nodes.last.y));
+  });
+
   test('Tree accepts a <treemodel> root with legacy DisplayAs="Tree <degrees>"', () {
     // Regression case: a real vendor file (EFL Designs "Med NSR Tree") uses
     // a <treemodel> root tag with DisplayAs="Tree 120" and no TreeType/
@@ -204,33 +216,44 @@ void main() {
     expect(model.nodes.map((n) => n.node).toSet(), Set.from(List.generate(20, (i) => i + 1)));
   });
 
-  test('Star with no StarStartLocation (defaults to Top) starts at the smallest y', () {
+  test('Star with no StarStartLocation (defaults to Top) starts in the upper half', () {
     // Regression: same y-up-vs-y-down class of bug as Tree/Circle/Arches.
+    // Node 1 starts at an inner knee vertex near the top, not necessarily
+    // the single most-extreme point (an adjacent outer tip can be more
+    // extreme), so this checks orientation (sign), not exact extremum.
     const xml =
         '<model DisplayAs="Star" name="S1" NumStrings="1" NodesPerString="20" StarPoints="5" />';
     final model = importXModel(xml);
-    final minY = model.nodes.map((n) => n.y).reduce((a, b) => a < b ? a : b);
-    expect(model.nodes.first.y, closeTo(minY, 1e-6));
+    expect(model.nodes.first.y, lessThan(0));
   });
 
-  test('Star LayerSizes produces nested layers, outer first (case-insensitive attrs)', () {
+  test('Star LayerSizes produces nested layers, inner first (case-insensitive attrs)', () {
     // Regression case: a real vendor file ("Med Tree Star") uses lowercase
-    // starRatio/starCenterPercent attribute names, and lists LayerSizes
-    // innermost-first while wiring outermost-first.
+    // starRatio/starCenterPercent attribute names, and both lists and wires
+    // LayerSizes innermost-first (confirmed against a reference render from
+    // xLights itself) — node 1 belongs to the smaller inner layer.
     const xml = '<starmodel name="Med Tree Star" parm1="1" parm2="50" parm3="5" '
         'DisplayAs="Star" LayerSizes="20,30" starRatio="2.42" starCenterPercent="67" '
         'StarStartLocation="Bottom Ctr-CW" />';
     final model = importXModel(xml);
     expect(model.nodes.length, 50);
-    // Outer layer (30 nodes) wired first, inner layer (20 nodes) second.
-    expect(model.nodes.sublist(0, 30).every((n) => n.strandIndex == 0), isTrue);
-    expect(model.nodes.sublist(30, 50).every((n) => n.strandIndex == 1), isTrue);
+    // Inner layer (20 nodes) wired first, outer layer (30 nodes) second.
+    expect(model.nodes.sublist(0, 20).every((n) => n.strandIndex == 0), isTrue);
+    expect(model.nodes.sublist(20, 50).every((n) => n.strandIndex == 1), isTrue);
 
     double dist(WiredNode n) => n.x * n.x + n.y * n.y;
-    final outerTip = model.nodes.sublist(0, 30).reduce((a, b) => dist(a) > dist(b) ? a : b);
-    final innerTip = model.nodes.sublist(30, 50).reduce((a, b) => dist(a) > dist(b) ? a : b);
+    final innerTip = model.nodes.sublist(0, 20).reduce((a, b) => dist(a) > dist(b) ? a : b);
+    final outerTip = model.nodes.sublist(20, 50).reduce((a, b) => dist(a) > dist(b) ? a : b);
     // Inner layer's farthest point should be ~67% of the outer layer's.
     expect(math.sqrt(dist(innerTip)) / math.sqrt(dist(outerTip)), closeTo(0.67, 0.01));
+
+    // Node 1 starts at an inner "knee" vertex, not an outer point: its
+    // distance from center should match the inner layer's own innerRadius
+    // (baseOuterRadius * innerScale / starRatio), not its outerRadius.
+    final node1Dist = math.sqrt(dist(model.nodes.first));
+    final layer0OuterRadius = (50 / 2) * 0.67;
+    final layer0InnerRadius = layer0OuterRadius / 2.42;
+    expect(node1Dist, closeTo(layer0InnerRadius, 0.01));
   });
 
   test('Spinner produces ArmsPerString x NodesPerArm nodes, arm-major order', () {

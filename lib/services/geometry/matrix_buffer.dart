@@ -24,6 +24,12 @@ class BufferPixel {
 ///   even row left-to-right, second half into the next odd row right-to-left.
 /// - [vertical]: strand axis is the column instead of the row (columns are
 ///   the physical strands; rows are position-along-strand).
+/// - [startAtTop] (`StartSide="T"`, default `false` = bottom per
+///   `StartSide="B"`): each strand's wiring starts from the far end
+///   (position-along-strand `pixelsPerStrand-1`) instead of position 0.
+/// - [reverseStrandOrder] (`Dir="R"`, default `false` = `Dir="L"`): strands
+///   are numbered last-to-first instead of first-to-last — each strand's own
+///   col/row position is unchanged, only wiring/node order changes.
 List<BufferPixel> buildMatrixBuffer({
   required int numStrings,
   required int nodesPerString,
@@ -31,6 +37,8 @@ List<BufferPixel> buildMatrixBuffer({
   required bool vertical,
   bool zigzag = true,
   bool alternateNodes = false,
+  bool startAtTop = false,
+  bool reverseStrandOrder = false,
 }) {
   final strandsPerStringSafe = strandsPerString < 1 ? 1 : strandsPerString;
   final numStrands = (numStrings < 1 ? 1 : numStrings) * strandsPerStringSafe;
@@ -38,22 +46,26 @@ List<BufferPixel> buildMatrixBuffer({
       (nodesPerString / strandsPerStringSafe).round().clamp(1, 1 << 20);
 
   final pixels = <BufferPixel>[];
-  for (var strand = 0; strand < numStrands; strand++) {
+  final strandOrder = [
+    for (var i = 0; i < numStrands; i++) reverseStrandOrder ? numStrands - 1 - i : i,
+  ];
+  for (final strand in strandOrder) {
     for (var pos = 0; pos < pixelsPerStrand; pos++) {
+      final basePos = startAtTop ? (pixelsPerStrand - 1 - pos) : pos;
       int primary; // strand axis (row in horizontal orientation)
       int secondary; // along-strand axis (col in horizontal orientation)
       if (alternateNodes) {
         final half = (pixelsPerStrand / 2).ceil();
-        if (pos < half) {
+        if (basePos < half) {
           primary = strand * 2;
-          secondary = pos;
+          secondary = basePos;
         } else {
           primary = strand * 2 + 1;
-          secondary = pixelsPerStrand - pos - 1;
+          secondary = pixelsPerStrand - basePos - 1;
         }
       } else {
         primary = strand;
-        secondary = (zigzag && strand.isOdd) ? (pixelsPerStrand - pos - 1) : pos;
+        secondary = (zigzag && strand.isOdd) ? (pixelsPerStrand - basePos - 1) : basePos;
       }
       pixels.add(BufferPixel(
         col: vertical ? primary : secondary,

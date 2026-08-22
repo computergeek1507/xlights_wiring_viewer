@@ -15,8 +15,11 @@ WiredModel buildMatrix(XmlElement root) {
   final numStrings = attrInt(root, 'NumStrings', parmFallback: 'parm1', fallback: 1);
   final nodesPerString = attrInt(root, 'NodesPerString', parmFallback: 'parm2', fallback: 1);
   final strandsPerString = attrInt(root, 'StrandsPerString', parmFallback: 'parm3', fallback: 1);
-  final zigzag = !attrBool(root, 'NoZigZag');
+  // "NoZig" in some files, "NoZigZag" in others.
+  final zigzag = !(attrBool(root, 'NoZigZag') || attrBool(root, 'NoZig'));
   final alternateNodes = attrBool(root, 'AlternateNodes');
+  final startAtTop = attrString(root, 'StartSide', fallback: 'B').toUpperCase() == 'T';
+  final reverseStrandOrder = attrString(root, 'Dir', fallback: 'L').toUpperCase() == 'R';
 
   final buffer = buildMatrixBuffer(
     numStrings: numStrings,
@@ -25,6 +28,8 @@ WiredModel buildMatrix(XmlElement root) {
     vertical: vertical,
     zigzag: zigzag,
     alternateNodes: alternateNodes,
+    startAtTop: startAtTop,
+    reverseStrandOrder: reverseStrandOrder,
   );
 
   final nodes = <WiredNode>[];

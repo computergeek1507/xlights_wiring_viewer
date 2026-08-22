@@ -25,8 +25,11 @@ WiredModel buildTree(XmlElement root) {
   final strandsPerString =
       math.max(1, attrInt(root, 'StrandsPerString', parmFallback: 'parm3', fallback: 1));
   final vertical = attrString(root, 'StrandDir', fallback: 'Vertical').toLowerCase() != 'horizontal';
-  final zigzag = !attrBool(root, 'NoZigZag');
+  // "NoZig" in some files, "NoZigZag" in others.
+  final zigzag = !(attrBool(root, 'NoZigZag') || attrBool(root, 'NoZig'));
   final alternateNodes = attrBool(root, 'AlternateNodes');
+  final startAtTop = attrString(root, 'StartSide', fallback: 'B').toUpperCase() == 'T';
+  final reverseStrandOrder = attrString(root, 'Dir', fallback: 'L').toUpperCase() == 'R';
 
   final buffer = buildMatrixBuffer(
     numStrings: numStrings,
@@ -35,6 +38,8 @@ WiredModel buildTree(XmlElement root) {
     vertical: vertical,
     zigzag: zigzag,
     alternateNodes: alternateNodes,
+    startAtTop: startAtTop,
+    reverseStrandOrder: reverseStrandOrder,
   );
 
   final bufferWi = buffer.fold(0, (m, p) => math.max(m, p.col)) + 1;
