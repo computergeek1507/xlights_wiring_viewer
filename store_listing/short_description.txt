@@ -1,0 +1,1 @@
+See the physical pixel wiring order of any xLights model, node by node.

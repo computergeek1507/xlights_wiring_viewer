@@ -1,0 +1,17 @@
+xLights Wiring Viewer helps you wire LED pixel props correctly by showing exactly which physical pixel is node 1, node 2, node 3... for any xLights model — right on your phone while you're out in the garage or workshop.
+
+FEATURES
+
+• Browse the xLights vendor catalog — search dozens of vendors and hundreds of prop models without leaving the app
+• Load any .xmodel file directly from your device
+• Load an xlights_rgbeffects.xml show file to browse every model already in your show
+• View the wiring order as a connected, pan-and-zoom diagram, color-coded by strand/arm/row
+• Toggle between front (display) and backside (wiring) view — wire from the back the way you actually build the prop
+• Toggle node number labels on or off
+• Print or export a wiring diagram to PDF for reference while you build
+
+SUPPORTED MODEL TYPES
+
+Custom Model (grid), Matrix, Single Line, Arches (including layered/concentric arches), Tree (round, flat, ribbon), Circle (including multi-ring), Star (including layered/concentric stars), and Spinner.
+
+No account required. No ads. No tracking.
