@@ -1,6 +1,6 @@
 <?php
 /**
- * xLights Wiring Viewer — vendor-catalog / .xmodel CORS proxy.
+ * xModel Wiring Viewer — vendor-catalog / .xmodel CORS proxy.
  *
  * The web build of the app can't fetch a vendor's model inventory or a
  * .xmodel file straight from that vendor's site (browsers block that:

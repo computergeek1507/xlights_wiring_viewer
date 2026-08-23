@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xml/xml.dart';
-import 'package:xlights_wiring_viewer/models/vendor_model.dart';
+import 'package:xmodel_wiring_viewer/models/vendor_model.dart';
 
 void main() {
   test('parses multiple <wiring> options with their labels', () {

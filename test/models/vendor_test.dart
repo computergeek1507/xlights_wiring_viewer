@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xlights_wiring_viewer/models/vendor.dart';
+import 'package:xmodel_wiring_viewer/models/vendor.dart';
 
 void main() {
   test('isDmxVendor matches DMX vendor names case-insensitively', () {

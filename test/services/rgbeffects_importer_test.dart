@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xlights_wiring_viewer/services/rgbeffects_importer.dart';
+import 'package:xmodel_wiring_viewer/services/rgbeffects_importer.dart';
 
 // Trimmed but structurally real xlights_rgbeffects.xml: <xrgb> wrapping
 // <models type="rgb_effects"> full of <model> elements alongside many other

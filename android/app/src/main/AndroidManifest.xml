@@ -4,7 +4,7 @@
          .xmodel downloads, thumbnails) fails silently on a real device. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="xlights_wiring_viewer"
+        android:label="xModel Wiring Viewer"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

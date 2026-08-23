@@ -1,1 +1,1 @@
-xLights Wiring Viewer
+xModel Wiring Viewer

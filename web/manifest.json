@@ -1,11 +1,11 @@
 {
-    "name": "xlights_wiring_viewer",
-    "short_name": "xlights_wiring_viewer",
+    "name": "xModel Wiring Viewer",
+    "short_name": "xModel Wiring",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Browse the xLights vendor model catalog or load a .xmodel file and view its physical wiring/node order.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

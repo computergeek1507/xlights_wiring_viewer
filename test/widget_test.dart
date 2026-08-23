@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:xlights_wiring_viewer/main.dart';
+import 'package:xmodel_wiring_viewer/main.dart';
 
 void main() {
   testWidgets('Home page shows the three entry points', (WidgetTester tester) async {

@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xlights_wiring_viewer/models/wired_model.dart';
-import 'package:xlights_wiring_viewer/services/xmodel_importer.dart';
+import 'package:xmodel_wiring_viewer/models/wired_model.dart';
+import 'package:xmodel_wiring_viewer/services/xmodel_importer.dart';
 
 void main() {
   group('Custom Model', () {

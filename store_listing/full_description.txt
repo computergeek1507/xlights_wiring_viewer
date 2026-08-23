@@ -1,4 +1,4 @@
-xLights Wiring Viewer helps you wire LED pixel props correctly by showing exactly which physical pixel is node 1, node 2, node 3... for any xLights model — right on your phone while you're out in the garage or workshop.
+xModel Wiring Viewer helps you wire LED pixel props correctly by showing exactly which physical pixel is node 1, node 2, node 3... for any xLights model — right on your phone while you're out in the garage or workshop.
 
 FEATURES
 

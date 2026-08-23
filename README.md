@@ -1,4 +1,4 @@
-# xLights Wiring Viewer
+# xModel Wiring Viewer
 
 A Flutter app that shows the physical pixel wiring order of an xLights model —
 browse the [xLights vendor catalog](https://github.com/xLightsSequencer/xLights/blob/master/download/xlights_vendors.xml)
@@ -6,7 +6,7 @@ or load a `.xmodel` file directly, and see a pan/zoomable diagram tracing node
 1, 2, 3, ... through the model, colored by strand. Built for wiring props by
 hand in the garage.
 
-**Live web build:** https://computergeek1507.github.io/xlights_wiring_viewer/
+**Live web build:** https://computergeek1507.github.io/xmodel_wiring_viewer/
 (full vendor browsing works via a CORS proxy — see
 [Web and the CORS proxy](#web-and-the-cors-proxy)). Also mirrored at
 https://wiring.scottnation.com/, which hosts the proxy itself.
@@ -48,16 +48,32 @@ own `src-core/models/*.cpp` source, not guessed.
 
 ```
 flutter pub get
-flutter run                 # picks whatever device/emulator is connected
-flutter run -d chrome       # web
-flutter build apk --release # Android APK
+flutter run                      # picks whatever device/emulator is connected
+flutter run -d chrome            # web
+flutter build apk --release      # Android APK
+flutter build appbundle --release # Android App Bundle (Play Store)
 ```
 
 Android's Gradle/Kotlin versions are pinned in `android/settings.gradle.kts`
-(AGP 8.7.3 / Kotlin 2.1.0) — a freshly-scaffolded newer toolchain breaks
-`file_picker`'s build, so don't bump these without re-testing a release
-build. CI (`.github/workflows/android.yml`) pins the same Flutter version
-(3.44.0) for the same reason.
+(AGP 8.11.1 / Kotlin 2.3.20 — bumped from 8.7.3/2.1.0 because
+`url_launcher_android`'s `androidx.browser` dependency needs AGP 8.9.1+) —
+a freshly-scaffolded newer toolchain breaks `file_picker`'s build, so don't
+bump these further without re-testing a release build. CI
+(`.github/workflows/android.yml`) pins the same Flutter version (3.44.0)
+for the same reason.
+
+### Release signing
+
+`android/app/build.gradle.kts` signs release builds with
+`android/key.properties` (gitignored, never committed) when it's present,
+falling back to debug signing otherwise so CI and `flutter run --release`
+still work without it. The keystore itself lives outside the repo at
+`C:\Users\scoot\keystores\xmodel_wiring_viewer\upload-keystore.jks` — **this
+is the permanent signing identity for the app on Play Store once
+published; losing it means you can never publish an update to that listing
+again.** Back it up somewhere durable (password manager attachment, encrypted
+cloud storage) — it is not recoverable if lost, and it is not checked into
+version control anywhere.
 
 ## Web and the CORS proxy
 

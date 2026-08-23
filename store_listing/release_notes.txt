@@ -1,0 +1,1 @@
+Initial release. Browse the xLights vendor catalog, load a .xmodel or xlights_rgbeffects.xml file, and view the physical pixel wiring order as a pan/zoom diagram. Supports Custom Model, Matrix, Arches, Tree, Circle, Star, Spinner, and Single Line — including layered/concentric shapes. Toggle front/backside view and node labels, or print/export the diagram to PDF.

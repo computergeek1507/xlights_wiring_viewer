@@ -81,7 +81,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('xLights Wiring Viewer')),
+      appBar: AppBar(title: const Text('xModel Wiring Viewer')),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),

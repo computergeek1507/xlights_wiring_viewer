@@ -12,7 +12,7 @@ class WiringViewerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'xLights Wiring Viewer',
+      title: 'xModel Wiring Viewer',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(useMaterial3: true).copyWith(
         scaffoldBackgroundColor: const Color(0xFF18181D),
