@@ -131,12 +131,13 @@ class WiringPainter extends CustomPainter {
 
     // Mark node 1 distinctly so the wiring start/direction is visible even
     // with labels off.
+    const startRingRadius = dotRadius + 2;
     canvas.drawCircle(
       screen(nodes.first),
-      dotRadius + 4,
+      startRingRadius,
       Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2
+        ..strokeWidth = 1.5
         ..color = lineColor,
     );
 
@@ -161,7 +162,8 @@ class WiringPainter extends CustomPainter {
           ),
           textDirection: TextDirection.ltr,
         )..layout();
-        tp.paint(canvas, p + Offset(dotRadius + 2, -tp.height / 2));
+        final clearance = n == nodes.first ? startRingRadius + 1.5 : dotRadius + 2;
+        tp.paint(canvas, p + Offset(clearance, -tp.height / 2));
       }
     }
   }
